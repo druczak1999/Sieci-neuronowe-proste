@@ -3,6 +3,8 @@ import numpy as np
 from GenerateEntries import GenerateEntries
 from sklearn.model_selection import train_test_split
 
+MEAN_SE = 100
+
 class Adaline:
 
     def LMS(self, prog, value, mi, wh):
@@ -15,7 +17,7 @@ class Adaline:
             for _ in range(len(d_train)):
                 weights.append([uniform(-1 * wh,wh),uniform(-1 * wh,wh), uniform(-1 * wh,wh)])
 
-            mean_square_error = 100
+            mean_square_error = MEAN_SE
             epochs = 0 
             while mean_square_error>= prog:
                 diffs=[]
@@ -32,12 +34,12 @@ class Adaline:
                 z = self.count_error(X_test[k], d_test[k],weights[k])
                 y_predicted = self.predicted_output_bi(z, prog) 
                 print("Y: "+str(y_predicted)+", d: "+ str(d_test[k]))
+
         print(sum(epochs_tab)/len(epochs_tab))
 
     def count_error(self, X, d, w):
         z = 0
-        for i in range(len(X)):
-            z+=X[i]*w[i]
+        for i in range(len(X)): z+=X[i]*w[i]
         return d - z
 
     def update_weights(self, X, w, diff, mi):
