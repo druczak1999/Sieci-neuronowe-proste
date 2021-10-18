@@ -3,6 +3,8 @@ import numpy as np
 from GenerateEntries import GenerateEntries
 from sklearn.model_selection import train_test_split
 
+DIFFERENCE = -100
+
 class SimplePerceptron:
 
     def learning_algorythm(self, alpha, prog, value, bias, unipolar, wh):
@@ -13,7 +15,7 @@ class SimplePerceptron:
         epoch_tab=[]
         for _ in range(10):
             weights = self.generate_weights(len(d),bias, wh)
-            differences_in_epoch = -1
+            differences_in_epoch = DIFFERENCE
             epochs = 0
             while differences_in_epoch != 0:
                 epochs += 1
@@ -26,16 +28,11 @@ class SimplePerceptron:
                     else:
                         y_predicted = self.predicted_output_bi(z, prog) 
                     diff = self.count_difference(y_predicted, d_train[k])
+                    if diff != 0 : differences_in_epoch += 1
                     diffs.append(diff)
-                    if diff != 0 : 
-                        differences_in_epoch += 1
                     weights[k] = self.update_weights(weights[k], X_train[k], diff, alpha)
-                # print(diffs)
             epoch_tab.append(epochs)
            
-            # z = self.sum_all([1,1], weights[0])
-            # y_predicted = self.predicted_output_uni(z, prog)
-            # print("Y: "+str(y_predicted)+", d: "+ str(1))
             for k in range(len(d_test)):
                 z = self.sum_all(X_test[k], weights[k])
                 if unipolar: y_predicted = self.predicted_output_uni(z, prog)
